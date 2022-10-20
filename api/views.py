@@ -32,8 +32,8 @@ class getSearches(generics.ListAPIView):
             # return Word.objects.filter(mar__istartswith=word) __iexact
             return Word.objects.filter(mar__iexact=word)
         else:
-            return Word.objects.filter(eng__istartswith=word)
-            # return Word.objects.filter(eng__iexact=word)
+            # return Word.objects.filter(eng__istartswith=word)
+            return Word.objects.filter(eng__iexact=word)
 
 
 
