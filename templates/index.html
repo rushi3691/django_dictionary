@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <title>Eng-Mar Dictionary</title>
+</head>
+<body>
+    <!-- <h1> hi </h1> -->
+    <div class="container py-5">
+        <div class="row" >
+            <div class="col input-group input-group-lg">
+                <!-- <span class="input-group-text" id="inputGroup-sizing-lg">Large</span> -->
+                <input id="word" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" placeholder="word">
+            </div>
+            <!-- <button >Primary</button> -->
+            <button type="button" class="col-md-auto btn btn-outline-primary me-1" onclick="getTranslation()">Submit</button>
+            <button type="button" class="col-md-auto btn btn-outline-primary" onclick="changeFrom()">Toggle</button>
+            <div class="col-md-auto">
+                <p class="m-0 py-2 align-middle" id="from-info">English->Marathi</p>
+            </div>
+        </div>
+        <ul class="list-group py-5" id="meaning"></ul>
+    </div>
+</body>
+<script>
+    let from = 0;
+    const from_info = document.getElementById("from-info")
+    const changeFrom = () =>{
+        if(from === 0){
+            from = 1;
+            from_info.innerHTML = "Marathi->English";
+        }else{
+            from = 0;
+            from_info.innerHTML = "English->Marathi";
+        }
+    }
+
+    const input = document.getElementById("word");
+    const meaning = document.getElementById("meaning");
+
+    const getTranslation = () => {
+        const word = input.value;
+        if(word === "") {
+            meaning.innerHTML = "Type some words!";
+            return;
+        }
+        const url = `http://127.0.0.1:8000/api/${word}?from=${from}`
+        fetch(url,)
+        .then(res => res.json())
+        .then(data => {
+            meaning.innerHTML = ""
+            console.log(data)
+            if(data['count']){
+                addWordsToList(data['results'])
+            }else{
+                meaning.innerHTML = `<li class="list-group-item">No data found</li>`;
+            }
+        })
+    }
+
+    const addWordsToList = (data) =>{
+        meaning.innerHTML = ""
+        data.map((element) => {
+            var listItem = document.createElement('li');
+            listItem.className = "list-group-item";
+            listItem.textContent = `${element['eng']} - ${element['mar']}`;
+            meaning.appendChild(listItem);
+        });
+    }
+
+
+
+</script>
+</html>
